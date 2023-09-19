@@ -1,4 +1,4 @@
-
+cat("Making Graphs: ")
 
 args <- commandArgs(trailingOnly = TRUE)
 jobname = "plantdataL_1"
@@ -31,6 +31,8 @@ for(i in 1:3) {
 
 # comparing stats
 
+cat('4')
+
 #data <- data.frame(diffs$V1, randomdiffs$V1)
 data <- data.frame(alloutputs$NNWDiff, alloutputs$RandomDatadiff, alloutputs$Benchmark_Adiff, alloutputs$Benchmark_Bdiff)
 df1_summary<-as.data.frame(apply(data,2,summary))
@@ -54,7 +56,7 @@ legend("bottomright", legend = c(paste("P Value:", format(
   t.test(alloutputs$NNWDiff, alloutputs$RandomDatadiff, alternative = "l")$p.value, digits = 3) )))
 axis(1, at = 1:6, labels =  c("Min", "1st Qt", "Median", "Mean", "3rd Qt", "Max"), cex.axis = 0.8)
 axis(2)
-dev.off()
+invisible(dev.off())
 
 # violin graph, density graph
 library(ggplot2)
@@ -69,19 +71,20 @@ pvalues <- c(format(t.test(alloutputs$NNWDiff, alloutputs$RandomDatadiff, altern
              format(t.test(alloutputs$NNWDiff, alloutputs$Benchmark_Adiff, alternative = "l")$p.value, digits = 3),
              format(t.test(alloutputs$NNWDiff, alloutputs$Benchmark_Bdiff, alternative = "l")$p.value, digits = 3),
              "P-Values")
-cat("4")
+cat("5")
 totaltests <- length(alloutputs$NNWDiff)
 png(filename = paste(directory, "error_density", jobname, ".png",sep = ""), width = wid, height = hei,res=300)
-ggplot(combined_df, aes(x = value, color = Predictor)) + geom_density(size = 1.5) + scale_color_manual(values = customcolors) +
+ggplot(combined_df, aes(x = value, color = Predictor)) + geom_density(linewidth = 1.5) + scale_color_manual(values = customcolors) +
   labs(x = "Error", y = "Density", title = "Deviation from Expected (error) Distribution", subtitle = bquote(bold(.(jobname)) ~ Total ~ .(totaltests) ~tests)  )
-dev.off()
+invisible(dev.off())
 
+cat("6")
 png(filename = paste(directory, "violin", jobname, ".png",sep = ""), width = wid, height = hei,res=300)
 ggplot(combined_df, aes(x = Predictor, y = value, fill = Predictor)) + geom_violin(trim = TRUE, fill = "white") + geom_boxplot(width = 0.1) + stat_summary(fun = "mean", geom="point", shape=23, size=2) + 
   labs(y = "Deviation from Expected (error)", title = "Deviation from Expected Densities", subtitle = bquote(bold(.(jobname)) ~ Total ~ .(totaltests) ~tests) ) + scale_fill_manual(values = customcolors) +
   annotate("text", x = c("random", "benchmA", "benchmB", "nnw"), y = -0.05, label = format(pvalues, nsmall = 2))
-dev.off()
-cat("5")
+invisible(dev.off())
+
 
 # distribution density graph
 combined_df <- rbind(data.frame(value = alloutputs$NNW, Predictor = rep("nnw", totaltests)),
@@ -89,20 +92,21 @@ combined_df <- rbind(data.frame(value = alloutputs$NNW, Predictor = rep("nnw", t
                      data.frame(value = alloutputs$Benchmark_A, Predictor = rep("benchmA", totaltests)),
                      data.frame(value = alloutputs$Benchmark_B, Predictor = rep("benchmB", totaltests)))
 
-png(filename = paste(directory, "prediction_density", jobname, ".png",sep = ""), width = wid, height = hei,res=300)
-ggplot(combined_df, aes(x = value, color = Predictor)) + geom_density(size = 1.5) + scale_color_manual(values = customcolors) +
+cat("7")
+png(filename = paste(directory, "prediction_density", jobname, ".png", sep = ""), width = wid, height = hei,res=300)
+ggplot(combined_df, aes(x = value, color = Predictor)) + geom_density(linewidth = 1.5) + scale_color_manual(values = customcolors) +
   labs(x = "Output", y = "Density", title = "Distribution of Predictions", subtitle = bquote(bold(.(jobname)) ~ Total ~ .(totaltests) ~tests) )
-dev.off()
+invisible(dev.off())
 
 
 # correlation graph
-
+cat("8")
 new_df <- data.frame(Actual = as.numeric(alloutputs$Actual), NNW = as.numeric(alloutputs$NNW))
-png(filename = paste(directory, "correlation_test", jobname, ".png",sep = ""), width = wid, height = hei,res=300)
-ggplot(new_df, aes(x = NNW , y = Actual)) stat_density_2d(geom = "raster", aes(fill = after_stat(density)), contour = FALSE) + scale_fill_gradient(low = "white", high = "black") +
+png(filename = paste(directory, "correlation_test", jobname, ".png", sep = ""), width = wid, height = hei,res=300)
+ggplot(new_df, aes(x = NNW , y = Actual)) + stat_density_2d(geom = "raster", aes(fill = after_stat(density)), contour = FALSE) + scale_fill_gradient(low = "white", high = "black") +
   labs(title = "Correlation Test", subtitle = bquote(bold(.(jobname)) ~ Total ~ .(totaltests) ~tests) ) + theme_bw()
-dev.off()
+invisible(dev.off())
 
 
-cat ("benchmark.R: finished making 6 graphs")
+cat ("_DONE")
 

@@ -262,7 +262,6 @@ class Input{
 	int nodesPerSector; // how many nodes are in the next layer. The actual number is nodesPerSector * numSectors.
 
 	~Input() {
-		cout << "Freeing INPUT" << endl;
 		for(int i = 0; i < 4; i++) {
 			for(int j = 0; j < numInputs; j++) {
 				delete nodes[i][j];
@@ -270,10 +269,8 @@ class Input{
 			delete[] nodes[i];
 		}
 		delete[] nodes;
-		cout << "Freed input" << endl;
 		//Display();
 		if(convolutional) {
-			cout << "Deleting CNN , num sectors " << numSectors << endl;
 			for(int i = 0; i < numSectors; i++) {
 				for(int j = 0; j < 4; j++) {
 					delete[] convWeights[i][j];
@@ -285,11 +282,10 @@ class Input{
 			delete[] convWeights;
 			delete[] convWeightsdldwsum;
 		}
-		cout << "Freed CNN input" << endl;
 	}
 	Input(int n, Column* next) { // constructor 
 		convolutional = false;
-		cout << "Initialized with no convolution" << endl;
+		cout << "NNW" << endl;
 		// create structure
 		numInputs = n;
 		nodes = new Node**[4];
@@ -605,9 +601,9 @@ class NeuralNetwork{
 		//exit(0);
 		convolutional = true;
 		filtersize = fs;
-		cout << "ic[0] (number of sectors) = " << ic[0] << ", a + 1 - filtersize = " << a + 1 - filtersize << endl;
+		//cout << "ic[0] (number of sectors) = " << ic[0] << ", a + 1 - filtersize = " << a + 1 - filtersize << endl;
 		ic[0] = (a + 1 - filtersize) * ic[0];
-		cout << "Convolutional layer will have " << ic[0] << " nodes" << endl;
+		//cout << "Convolutional layer will have " << ic[0] << " nodes" << endl;
 		numICols = (int)ic.size();
 		colSizes.push_back(a);
 		for(auto i : ic) {colSizes.push_back(i);}

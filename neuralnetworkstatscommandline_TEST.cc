@@ -530,8 +530,8 @@ while(true) {
     if(true) {
     	string command = "Rscript benchmark.R " + extension + " " + argv[1];
     	int result = system(command.c_str());
-    	cout << " SYSTEM: Ran rscript with system command: " << command << endl;
-    	cout << " SYSTEM Command returns:" << result << endl;
+    	//cout << " SYSTEM: Ran rscript with system command: " << command << endl;
+    	cout << endl << " SYSTEM Command returns:" << result << endl;
     	//Rscript benchmark.R plantdataL_1 plantdatajobL.txt
     }
 
@@ -543,7 +543,7 @@ while(true) {
     run_summary << inputfilename << "\t" << extension << "\t" << runSize << "\t" << testSize << "\t" << stochastic << "\t";
     for(int i = 0; i < numInternalCols; i++) {
     	if(i == 0 && filtersize != 0) {
-    		run_summary << "FILTER(" << filtersize << ");LAYERS(" << internalCols[i] << "):";
+    		run_summary << "FILTER(" << filtersize << ");SECTORS(" << internalCols[i] << "):";
     	} else {
     		run_summary << internalCols[i]; if(i < numInternalCols - 1) run_summary << ":";
     	}
